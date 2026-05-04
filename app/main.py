@@ -8,20 +8,17 @@ class Person:
 
 
 def create_person_list(people: list) -> list:
-    ppl_list = []
-    for person in people:
-        Person(person["name"], person["age"])
+    Person.people.clear()
 
-    for person in people:
-        name = person["name"]
-        instance = Person.people[name]
+    person_list = [Person(person["name"], person["age"]) for person in people]
 
-        spouse_type = "wife" if person.get("wife") else "husband"
-        spouse_name = person.get(spouse_type)
+    for person_dict, person_obj in zip(people, person_list):
+        wife = person_dict.get("wife")
+        husband = person_dict.get("husband")
 
-        if spouse_name is not None:
-            setattr(instance, spouse_type, Person.people[spouse_name])
+        if wife:
+            setattr(person_obj, "wife", Person.people.get(wife))
+        if husband:
+            setattr(person_obj, "husband", Person.people.get(husband))
 
-        ppl_list.append(instance)
-
-    return ppl_list
+    return person_list
